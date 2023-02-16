@@ -33,9 +33,9 @@ export function  App () {
     try {
       setIsLoading(true);
 
-      const imagesFetch = await requestImages(page, query, per_page);
-      setImages([...images, ...imagesFetch.hits]);
-      setTotalImages(imagesFetch.total);
+      const images = await requestImages(page, query, per_page);
+      setImages(prevItems => [...prevItems, ...images.hits]);
+      setTotalImages(images.total);
   
     } catch (error) {
       console.log(error.message);
