@@ -11,21 +11,22 @@ export function  App () {
 
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState(null);
   const [currentImg, setCurrentImg] = useState(null);
-  const [per_page, setPer_page] = useState(12);
   const [totalImages, setTotalImages] = useState(0);
 
 
   useEffect(() => {
     if (query === null && page === 1) return;
-    fetchImages(page, query, per_page);
-    if (images.length > 0)
-      {setTimeout(() => window.scrollBy({ top: 1200, behavior: 'smooth' }), 100);}
-    
+    fetchImages(page, query, 12);
   }, [page, query]);
+
+  useEffect(() => {
+    if (images.length > 0) {
+      setTimeout(() => window.scrollBy({ top: 1200, behavior: 'smooth' }), 100);
+    }
+  }, [images.length]);
 
 
   async function fetchImages(page, query, per_page) {
@@ -37,7 +38,7 @@ export function  App () {
       setTotalImages(imagesFetch.total);
   
     } catch (error) {
-      setError(error.message);
+      console.log(error.message);
       
     } finally {
       setIsLoading(false);
@@ -71,7 +72,7 @@ export function  App () {
         {isLoading && <Loader />}
         <Imagegallery images={images} onClick={handleGallery} />
         {(images.length > 0 &&
-          page < (Math.ceil(totalImages / per_page))) && (
+          page < (Math.ceil(totalImages / 12))) && (
             <Button onClick={handleButton} />
           )}
         {currentImg && (
