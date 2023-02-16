@@ -23,10 +23,10 @@ export function  App () {
   }, [page, query]);
 
   useEffect(() => {
-    if (images.length > 0) {
+    if (page > 1) {
       setTimeout(() => window.scrollBy({ top: 1200, behavior: 'smooth' }), 100);
     }
-  }, [images.length]);
+  }, [page]);
 
 
   async function fetchImages(page, query, per_page) {
