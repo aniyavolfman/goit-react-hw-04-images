@@ -7,6 +7,9 @@ import { Modal } from './Modal/Modal';
 import { Searchbar } from './Searchbar/Searchbar';
 import { requestImages } from '../services/api';
 
+
+const PER_PAGE = 12;
+
 export function  App () {
 
   const [images, setImages] = useState([]);
@@ -33,11 +36,11 @@ export function  App () {
     }
 
     if (!query && page === 1) return;
-    fetchImages(page, query, 12);
+    fetchImages(page, query, PER_PAGE);
   }, [page, query]);
 
   useEffect(() => {
-    if (images.length > 12) {
+    if (images.length > PER_PAGE) {
       window.scrollBy({ top: 1200, behavior: 'smooth' });
     }
   }, [images.length]);
@@ -68,16 +71,11 @@ export function  App () {
         <Searchbar onSubmit={handleSubmit} />
         {isLoading && <Loader />}
         <Imagegallery images={images} onClick={handleGallery} />
-        {(images.length > 0 &&
-          page < (Math.ceil(totalImages / 12))) && (
-            <Button onClick={handleButton} />
-          )}
+        {images.length > 0 && page < Math.ceil(totalImages / PER_PAGE) && (
+          <Button onClick={handleButton} />
+        )}
         {currentImg && (
-          <Modal
-            largeImg={currentImg}
-            alt={query}
-            closeModal={closeModal}
-          />
+          <Modal largeImg={currentImg} alt={query} closeModal={closeModal} />
         )}
       </Container>
     );

@@ -13,7 +13,6 @@ const imagesAPI = axios.create({
 })
 
 
-
 export async function requestImages (page, query, per_page) {
     const { data } = await imagesAPI.get(
       '',
