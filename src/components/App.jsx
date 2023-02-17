@@ -18,32 +18,29 @@ export function  App () {
 
 
   useEffect(() => {
+    async function fetchImages(page, query, per_page) {
+      try {
+        setIsLoading(true);
+
+        const images = await requestImages(page, query, per_page);
+        setImages(prevItems => [...prevItems, ...images.hits]);
+        setTotalImages(images.total);
+      } catch (error) {
+        console.log(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
     if (query === null && page === 1) return;
     fetchImages(page, query, 12);
   }, [page, query]);
 
   useEffect(() => {
-    if (page > 1) {
-      setTimeout(() => window.scrollBy({ top: 1200, behavior: 'smooth' }), 100);
+    if (images.length > 12) {
+      window.scrollBy({ top: 1200, behavior: 'smooth' });
     }
-  }, [page]);
-
-
-  async function fetchImages(page, query, per_page) {
-    try {
-      setIsLoading(true);
-
-      const images = await requestImages(page, query, per_page);
-      setImages(prevItems => [...prevItems, ...images.hits]);
-      setTotalImages(images.total);
-  
-    } catch (error) {
-      console.log(error.message);
-      
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  }, [images.length]);
 
   const handleButton = () => {
     setPage(prevState => prevState + 1);
