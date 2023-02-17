@@ -32,7 +32,7 @@ export function  App () {
       }
     }
 
-    if (query === null && page === 1) return;
+    if (!query && page === 1) return;
     fetchImages(page, query, 12);
   }, [page, query]);
 
