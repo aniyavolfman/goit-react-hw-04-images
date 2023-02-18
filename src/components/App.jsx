@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button } from './Button/Button';
 import { Container } from './Container/Container';
 import { Imagegallery } from './Imagegallery/Imagegallery';
@@ -6,6 +6,7 @@ import { Loader } from './Loader/Loader';
 import { Modal } from './Modal/Modal';
 import { Searchbar } from './Searchbar/Searchbar';
 import { requestImages } from '../services/api';
+import { ModalContext } from 'context/ModalContext';
 
 
 const PER_PAGE = 12;
@@ -16,8 +17,8 @@ export function  App () {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState(null);
-  const [currentImg, setCurrentImg] = useState(null);
   const [totalImages, setTotalImages] = useState(0);
+  const { modalData: { largeImg }, changeModalData } = useContext(ModalContext);
 
 
   useEffect(() => {
@@ -58,12 +59,9 @@ export function  App () {
     setPage(1);
   };
 
-  const handleGallery = event => {
-    setCurrentImg(event.target.dataset.largeimg);
-  };
 
-  const closeModal = () => {
-    setCurrentImg(null);
+  const handleGallery = event => {
+    changeModalData(event.target.dataset.largeimg, query);
   };
 
     return (
@@ -74,9 +72,7 @@ export function  App () {
         {images.length > 0 && page < Math.ceil(totalImages / PER_PAGE) && (
           <Button onClick={handleButton} />
         )}
-        {currentImg && (
-          <Modal largeImg={currentImg} alt={query} closeModal={closeModal} />
-        )}
+        { largeImg && <Modal />}
       </Container>
     );
   }
